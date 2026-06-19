@@ -103,12 +103,54 @@ header p {
     color: var(--text-muted);
 }
 
-/* Dashboard Layout */
+/* Main Content Wrapper */
 main {
     width: 100%;
     max-width: 1100px;
 }
 
+/* KPI Analytics Summary Grid */
+.kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+    width: 100%;
+}
+
+.kpi-card {
+    background-color: var(--panel-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 18px 20px;
+    box-shadow: var(--shadow-md);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    transition: var(--transition-base);
+}
+
+.kpi-card:hover {
+    border-color: var(--border-hover);
+    transform: translateY(-1px);
+}
+
+.kpi-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.kpi-value {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--text-main);
+    letter-spacing: -0.025em;
+}
+
+/* Dashboard Columns Container */
 .container {
     display: grid;
     grid-template-columns: 1fr 1.6fr;
@@ -117,6 +159,12 @@ main {
 }
 
 .sidebar-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.main-stack {
     display: flex;
     flex-direction: column;
     gap: 24px;
@@ -137,7 +185,7 @@ main {
 }
 
 h2 {
-    font-size: 1.2rem;
+    font-size: 1.15rem;
     font-weight: 700;
     color: var(--text-main);
     margin-bottom: 16px;
@@ -148,7 +196,7 @@ h2 {
 
 /* Custom list for rules */
 .rules-box {
-    background-color: rgba(255, 255, 255, 0.02);
+    background-color: rgba(255, 255, 255, 0.015);
     border-left: 3px solid var(--accent);
     border-radius: 0 var(--radius-md) var(--radius-md) 0;
     padding: 16px;
@@ -234,10 +282,10 @@ h2 {
     justify-content: center;
     font-size: 0.85rem;
     font-weight: 700;
-    background-color: rgba(255, 255, 255, 0.01);
+    background-color: rgba(255, 255, 255, 0.015);
     color: var(--text-muted);
     position: relative;
-    cursor: default;
+    cursor: pointer;
     transition: var(--transition-base);
 }
 
@@ -269,6 +317,158 @@ h2 {
 .day.loss:hover {
     background-color: rgba(239, 68, 68, 0.15);
     border-color: var(--loss-text);
+}
+
+.day.active-focus {
+    border-color: var(--accent) !important;
+    box-shadow: 0 0 8px var(--accent-glow) !important;
+}
+
+/* Interactive Detail Viewer Panel styling */
+.detail-panel {
+    animation: slideDown 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    border-color: var(--accent-glow);
+}
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.close-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-size: 1.4rem;
+    cursor: pointer;
+    padding: 0 6px;
+    width: auto;
+    box-shadow: none;
+    line-height: 1;
+    transition: var(--transition-base);
+}
+
+.close-btn:hover {
+    color: var(--text-main);
+    background: transparent;
+    box-shadow: none;
+    transform: scale(1.1);
+}
+
+.detail-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 16px;
+}
+
+.detail-date {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.detail-pnl-badge {
+    padding: 3px 10px;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+}
+
+.detail-pnl-badge.win {
+    background-color: var(--win-color);
+    color: var(--win-text);
+    border: 1px solid var(--win-border);
+}
+
+.detail-pnl-badge.loss {
+    background-color: var(--loss-color);
+    color: var(--loss-text);
+    border: 1px solid var(--loss-border);
+}
+
+.detail-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.detail-lbl {
+    display: block;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-bottom: 2px;
+    letter-spacing: 0.05em;
+}
+
+.detail-val {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.detail-field {
+    margin-bottom: 14px;
+}
+
+.detail-field:last-child {
+    margin-bottom: 0;
+}
+
+.detail-text {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    white-space: pre-wrap;
+    background-color: rgba(255, 255, 255, 0.01);
+    border: 1px solid var(--border);
+    padding: 8px 12px;
+    border-radius: var(--radius-md);
+    margin-top: 4px;
+    line-height: 1.4;
+}
+
+/* Equity Line Chart Panel */
+.chart-container {
+    position: relative;
+    width: 100%;
+    height: 200px;
+    margin-top: 10px;
+}
+
+.chart-placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.01);
+    border-radius: var(--radius-md);
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    border: 1px dashed var(--border);
+    pointer-events: none;
+}
+
+#equityChart {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
 }
 
 /* Forms layout & controls */
@@ -364,6 +564,29 @@ button:active {
     transform: translateY(0);
 }
 
+/* Reset / Warning button configuration */
+.admin-panel {
+    border-color: rgba(239, 68, 68, 0.2);
+}
+
+.admin-panel:hover {
+    border-color: rgba(239, 68, 68, 0.35);
+}
+
+.reset-btn {
+    background-color: transparent;
+    border: 1px solid var(--loss-border);
+    color: var(--loss-text);
+    box-shadow: none;
+    transition: var(--transition-base);
+}
+
+.reset-btn:hover {
+    background-color: var(--loss-color);
+    border-color: var(--loss-text);
+    box-shadow: 0 4px 12px var(--loss-glow);
+}
+
 /* Auto calculated P&L Alert Badge */
 .auto-calc {
     background-color: rgba(255, 255, 255, 0.02);
@@ -379,6 +602,12 @@ button:active {
 }
 
 /* Responsive breakpoint styling */
+@media (max-width: 992px) {
+    .kpi-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
 @media (max-width: 768px) {
     body {
         padding: 20px 16px;
@@ -393,5 +622,11 @@ button:active {
     .row {
         flex-direction: column;
         gap: 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .kpi-grid {
+        grid-template-columns: 1fr;
     }
 }

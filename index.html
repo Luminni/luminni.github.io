@@ -33,140 +33,255 @@
     </header>
 
     <!-- Main Content Container -->
-    <main class="container">
-        <!-- Sidebar Stack: Rules & Calendar -->
-        <div class="sidebar-stack">
-            <!-- Rules Section -->
-            <section class="panel" aria-labelledby="rules-heading">
-                <h2 id="rules-heading">My Trading Rules</h2>
-                <div class="rules-box">
-                    <ol>
-                        <li>Risk 1% of total (or max $1000/10% if personal capital).</li>
-                        <li>No revenge/retrading after a loss. Take the day off.</li>
-                        <li>Don’t rush pulling out, but don't stay too long. Be confident!</li>
-                        <li>One trade a day (Starter - 1 Year).</li>
-                        <li>Log ALL trade entries and reviews.</li>
-                    </ol>
-                </div>
-            </section>
-
-            <!-- Calendar Section -->
-            <section class="panel" aria-labelledby="calendar-heading">
-                <div class="calendar-header">
-                    <h2 id="calendar-heading">Trade Calendar</h2>
-                    <span id="calendarTitle" class="calendar-month-title">Current Month</span>
-                </div>
-                <div class="calendar-weekday-grid">
-                    <div class="weekday-lbl">Su</div>
-                    <div class="weekday-lbl">Mo</div>
-                    <div class="weekday-lbl">Tu</div>
-                    <div class="weekday-lbl">We</div>
-                    <div class="weekday-lbl">Th</div>
-                    <div class="weekday-lbl">Fr</div>
-                    <div class="weekday-lbl">Sa</div>
-                </div>
-                <div id="calendar" class="calendar-grid"></div>
-            </section>
-        </div>
-
-        <!-- Main Form Section: Trade Log -->
-        <section class="panel" aria-labelledby="log-heading">
-            <h2 id="log-heading">Daily Trade Log</h2>
-            <form id="tradeForm">
-                <div class="row">
-                    <div class="form-group">
-                        <label for="tradeDate">Date</label>
-                        <input type="date" id="tradeDate" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="accType">Account Type</label>
-                        <select id="accType">
-                            <option value="funded">Funded / Prop</option>
-                            <option value="personal">Personal Capital</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="form-group">
-                        <label for="accBalance">Total Account Balance ($)</label>
-                        <input type="number" id="accBalance" required placeholder="e.g. 50000">
-                    </div>
-                    <div class="form-group">
-                        <label for="maxRisk">Max Allowed Risk ($)</label>
-                        <input type="text" id="maxRisk" disabled value="$0.00">
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="preMarket">Pre-Market Plan</label>
-                    <textarea id="preMarket" placeholder="What setups, bias, and levels are you watching today?" required></textarea>
-                </div>
-
-                <div class="row">
-                    <div class="form-group">
-                        <label for="marketType">Market Type</label>
-                        <select id="marketType">
-                            <option value="Bull Trend">Bull Trend</option>
-                            <option value="Bear Trend">Bear Trend</option>
-                            <option value="Range Bound">Range Bound</option>
-                            <option value="Choppy / Unclear">Choppy / Unclear</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="positionType">Position</label>
-                        <select id="positionType">
-                            <option value="long">Long (Buy)</option>
-                            <option value="short">Short (Sell)</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="form-group">
-                        <label for="shares">Shares / Contracts</label>
-                        <input type="number" id="shares" required placeholder="e.g. 100">
-                    </div>
-                    <div class="form-group">
-                        <label for="stopLoss">Stop Loss Price ($)</label>
-                        <input type="number" step="0.01" id="stopLoss" required placeholder="e.g. 98.50">
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="form-group">
-                        <label for="entryPrice">Entry Price ($)</label>
-                        <input type="number" step="0.01" id="entryPrice" required placeholder="e.g. 100.00">
-                    </div>
-                    <div class="form-group">
-                        <label for="exitPrice">Exit Price ($)</label>
-                        <input type="number" step="0.01" id="exitPrice" required placeholder="e.g. 102.50">
-                    </div>
-                </div>
-
-                <!-- Auto calculated Net P&L Area -->
-                <div class="auto-calc" id="pnlDisplay">
-                    Auto-Calculated P&L: $0.00
-                </div>
-
-                <div class="form-group">
-                    <label for="mindset">Mindset / Emotions during trade</label>
-                    <textarea id="mindset" placeholder="Were you confident? Anxious? Did you rush your entry?" required></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label for="mistakes">Mistakes (If any)</label>
-                    <textarea id="mistakes" placeholder="Did you FOMO, size too large, or break any trading rules?"></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label for="eodReview">End of Day Review</label>
-                    <textarea id="eodReview" placeholder="Lessons learned, how to improve, notes for tomorrow..." required></textarea>
-                </div>
-
-                <button type="submit">Save Trade Log</button>
-            </form>
+    <main>
+        <!-- KPI Analytics Summary Row -->
+        <section class="kpi-grid" aria-label="Trading Performance Metrics">
+            <div class="kpi-card">
+                <span class="kpi-label">Total Net P&L</span>
+                <span id="kpiNetPnL" class="kpi-value">$0.00</span>
+            </div>
+            <div class="kpi-card">
+                <span class="kpi-label">Win Rate</span>
+                <span id="kpiWinRate" class="kpi-value">0.0%</span>
+            </div>
+            <div class="kpi-card">
+                <span class="kpi-label">Total Trades</span>
+                <span id="kpiTotalTrades" class="kpi-value">0</span>
+            </div>
+            <div class="kpi-card">
+                <span class="kpi-label">Avg. Trade P&L</span>
+                <span id="kpiAvgPnL" class="kpi-value">$0.00</span>
+            </div>
         </section>
+
+        <!-- Two-column Dashboard Workspace -->
+        <div class="container">
+            <!-- Sidebar Stack: Rules, Calendar, Day Details & Reset -->
+            <div class="sidebar-stack">
+                <!-- Rules Section -->
+                <section class="panel" aria-labelledby="rules-heading">
+                    <h2 id="rules-heading">My Trading Rules</h2>
+                    <div class="rules-box">
+                        <ol>
+                            <li>Risk 1% of total (or max $1000/10% if personal capital).</li>
+                            <li>No revenge/retrading after a loss. Take the day off.</li>
+                            <li>Don’t rush pulling out, but don't stay too long. Be confident!</li>
+                            <li>One trade a day (Starter - 1 Year).</li>
+                            <li>Log ALL trade entries and reviews.</li>
+                        </ol>
+                    </div>
+                </section>
+
+                <!-- Calendar Section -->
+                <section class="panel" aria-labelledby="calendar-heading">
+                    <div class="calendar-header">
+                        <h2 id="calendar-heading">Trade Calendar</h2>
+                        <span id="calendarTitle" class="calendar-month-title">Current Month</span>
+                    </div>
+                    <div class="calendar-weekday-grid">
+                        <div class="weekday-lbl">Su</div>
+                        <div class="weekday-lbl">Mo</div>
+                        <div class="weekday-lbl">Tu</div>
+                        <div class="weekday-lbl">We</div>
+                        <div class="weekday-lbl">Th</div>
+                        <div class="weekday-lbl">Fr</div>
+                        <div class="weekday-lbl">Sa</div>
+                    </div>
+                    <div id="calendar" class="calendar-grid"></div>
+                </section>
+
+                <!-- Interactive Trade Detail Panel (Shows when a calendar day is clicked) -->
+                <section id="detailPanel" class="panel detail-panel" style="display: none;" aria-labelledby="detail-heading">
+                    <div class="detail-header">
+                        <h2 id="detail-heading">Trade Details</h2>
+                        <button type="button" id="closeDetailBtn" class="close-btn" aria-label="Close details">&times;</button>
+                    </div>
+                    <div class="detail-meta">
+                        <span id="detailDate" class="detail-date">-</span>
+                        <span id="detailPnL" class="detail-pnl-badge">$0.00</span>
+                    </div>
+                    <div class="detail-grid">
+                        <div>
+                            <span class="detail-lbl">Account Type</span>
+                            <span id="detailAccType" class="detail-val">-</span>
+                        </div>
+                        <div>
+                            <span class="detail-lbl">Market Bias</span>
+                            <span id="detailMarketType" class="detail-val">-</span>
+                        </div>
+                        <div>
+                            <span class="detail-lbl">Position</span>
+                            <span id="detailPosition" class="detail-val">-</span>
+                        </div>
+                        <div>
+                            <span class="detail-lbl">Contracts / Size</span>
+                            <span id="detailShares" class="detail-val">-</span>
+                        </div>
+                        <div>
+                            <span class="detail-lbl">Entry Price</span>
+                            <span id="detailEntry" class="detail-val">-</span>
+                        </div>
+                        <div>
+                            <span class="detail-lbl">Exit Price</span>
+                            <span id="detailExit" class="detail-val">-</span>
+                        </div>
+                    </div>
+                    <div class="detail-field">
+                        <span class="detail-lbl">Pre-Market Plan</span>
+                        <p id="detailPreMarket" class="detail-text">-</p>
+                    </div>
+                    <div class="detail-field">
+                        <span class="detail-lbl">Mindset & Emotions</span>
+                        <p id="detailMindset" class="detail-text">-</p>
+                    </div>
+                    <div class="detail-field">
+                        <span class="detail-lbl">Mistakes</span>
+                        <p id="detailMistakes" class="detail-text">-</p>
+                    </div>
+                    <div class="detail-field">
+                        <span class="detail-lbl">EOD Review</span>
+                        <p id="detailEOD" class="detail-text">-</p>
+                    </div>
+                </section>
+
+                <!-- Database Administration Panel -->
+                <section class="panel admin-panel" aria-labelledby="admin-heading">
+                    <h2 id="admin-heading" style="color: var(--loss-text);">Reset Journal</h2>
+                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px;">This action will permanently delete all logged trades from local storage.</p>
+                    <button type="button" id="resetBtn" class="reset-btn">Reset Data</button>
+                </section>
+            </div>
+
+            <!-- Main Panel Stack: Chart & Trade Log Form -->
+            <div class="main-stack">
+                <!-- Equity Curve Chart Panel -->
+                <section class="panel chart-panel" aria-labelledby="chart-heading">
+                    <h2 id="chart-heading">Equity Curve (P&L Chart)</h2>
+                    <div class="chart-container">
+                        <svg id="equityChart" width="100%" height="200" viewBox="0 0 600 200" preserveAspectRatio="none">
+                            <defs>
+                                <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="0%" stop-color="var(--accent)" stop-opacity="0.2"/>
+                                    <stop offset="100%" stop-color="var(--accent)" stop-opacity="0.0"/>
+                                </linearGradient>
+                            </defs>
+                            <!-- Grid lines -->
+                            <line x1="0" y1="30" x2="600" y2="30" stroke="var(--border)" stroke-width="1" stroke-dasharray="4"/>
+                            <line x1="0" y1="100" x2="600" y2="100" stroke="var(--border)" stroke-width="1" stroke-dasharray="4"/>
+                            <line x1="0" y1="170" x2="600" y2="170" stroke="var(--border)" stroke-width="1" stroke-dasharray="4"/>
+                            <!-- Chart Area Path -->
+                            <path id="chartArea" d="" fill="url(#chartGradient)"/>
+                            <!-- Chart Line Path -->
+                            <path id="chartLine" d="" fill="none" stroke="var(--accent)" stroke-width="2.5"/>
+                            <!-- Baseline indicator (y=0) -->
+                            <line id="zeroLine" x1="0" y1="100" x2="600" y2="100" stroke="rgba(255,255,255,0.12)" stroke-width="1.5"/>
+                        </svg>
+                        <div id="chartPlaceholder" class="chart-placeholder">
+                            Not enough data. Log at least two trading days to see your equity curve.
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Daily Trade Log Section -->
+                <section class="panel" aria-labelledby="log-heading">
+                    <h2 id="log-heading">Daily Trade Log</h2>
+                    <form id="tradeForm">
+                        <div class="row">
+                            <div class="form-group">
+                                <label for="tradeDate">Date</label>
+                                <input type="date" id="tradeDate" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="accType">Account Type</label>
+                                <select id="accType">
+                                    <option value="funded">Funded / Prop</option>
+                                    <option value="personal">Personal Capital</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group">
+                                <label for="accBalance">Total Account Balance ($)</label>
+                                <input type="number" id="accBalance" required placeholder="e.g. 50000">
+                            </div>
+                            <div class="form-group">
+                                <label for="maxRisk">Max Allowed Risk ($)</label>
+                                <input type="text" id="maxRisk" disabled value="$0.00">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="preMarket">Pre-Market Plan</label>
+                            <textarea id="preMarket" placeholder="What setups, bias, and levels are you watching today?" required></textarea>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group">
+                                <label for="marketType">Market Type</label>
+                                <select id="marketType">
+                                    <option value="Bull Trend">Bull Trend</option>
+                                    <option value="Bear Trend">Bear Trend</option>
+                                    <option value="Range Bound">Range Bound</option>
+                                    <option value="Choppy / Unclear">Choppy / Unclear</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="positionType">Position</label>
+                                <select id="positionType">
+                                    <option value="long">Long (Buy)</option>
+                                    <option value="short">Short (Sell)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group">
+                                <label for="shares">Shares / Contracts</label>
+                                <input type="number" id="shares" required placeholder="e.g. 100">
+                            </div>
+                            <div class="form-group">
+                                <label for="stopLoss">Stop Loss Price ($)</label>
+                                <input type="number" step="0.01" id="stopLoss" required placeholder="e.g. 98.50">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group">
+                                <label for="entryPrice">Entry Price ($)</label>
+                                <input type="number" step="0.01" id="entryPrice" required placeholder="e.g. 100.00">
+                            </div>
+                            <div class="form-group">
+                                <label for="exitPrice">Exit Price ($)</label>
+                                <input type="number" step="0.01" id="exitPrice" required placeholder="e.g. 102.50">
+                            </div>
+                        </div>
+
+                        <!-- Auto calculated Net P&L Area -->
+                        <div class="auto-calc" id="pnlDisplay">
+                            Auto-Calculated P&L: $0.00
+                        </div>
+
+                        <div class="form-group">
+                            <label for="mindset">Mindset / Emotions during trade</label>
+                            <textarea id="mindset" placeholder="Were you confident? Anxious? Did you rush your entry?" required></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="mistakes">Mistakes (If any)</label>
+                            <textarea id="mistakes" placeholder="Did you FOMO, size too large, or break any trading rules?"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="eodReview">End of Day Review</label>
+                            <textarea id="eodReview" placeholder="Lessons learned, how to improve, notes for tomorrow..." required></textarea>
+                        </div>
+
+                        <button type="submit">Save Trade Log</button>
+                    </form>
+                </section>
+            </div>
+        </div>
     </main>
 </body>
 
