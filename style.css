@@ -1,0 +1,397 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+:root {
+    /* Typography */
+    --font-primary: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+    /* Theme Palette - Slate/Zinc Dark Mode */
+    --bg-color: #09090b;          /* Zinc 950 */
+    --panel-bg: #18181b;         /* Zinc 900 */
+    --text-main: #f4f4f5;         /* Zinc 100 */
+    --text-muted: #a1a1aa;        /* Zinc 400 */
+    --border: #27272a;            /* Zinc 800 */
+    --border-hover: #3f3f46;      /* Zinc 700 */
+
+    /* Win State (Green Accent) */
+    --win-color: rgba(16, 185, 129, 0.1);    /* Emerald 500 10% opacity */
+    --win-text: #34d399;                     /* Emerald 400 */
+    --win-border: rgba(52, 211, 153, 0.4);   /* Emerald 400 40% opacity */
+    --win-glow: rgba(52, 211, 153, 0.15);
+
+    /* Loss State (Red Accent) */
+    --loss-color: rgba(239, 68, 68, 0.1);   /* Red 500 10% opacity */
+    --loss-text: #f87171;                    /* Red 400 */
+    --loss-border: rgba(248, 113, 113, 0.4);  /* Red 400 40% opacity */
+    --loss-glow: rgba(248, 113, 113, 0.15);
+
+    /* UI Primary Accent (Indigo Theme) */
+    --accent: #6366f1;            /* Indigo 500 */
+    --accent-hover: #4f46e5;      /* Indigo 600 */
+    --accent-glow: rgba(99, 102, 241, 0.25);
+    
+    /* Layout & Shadow */
+    --radius-lg: 12px;
+    --radius-md: 8px;
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --transition-base: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Base resets & setups */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-primary);
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    padding: 30px 20px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Header & Branding */
+header {
+    width: 100%;
+    max-width: 1100px;
+    margin-bottom: 30px;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo-icon {
+    width: 32px;
+    height: 32px;
+    background: linear-gradient(135deg, var(--accent), #a78bfa);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    color: #fff;
+    font-size: 1.2rem;
+    box-shadow: 0 4px 10px var(--accent-glow);
+}
+
+header h1 {
+    font-size: 1.6rem;
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    background: linear-gradient(to right, #ffffff, #e4e4e7);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+header p {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+}
+
+/* Dashboard Layout */
+main {
+    width: 100%;
+    max-width: 1100px;
+}
+
+.container {
+    display: grid;
+    grid-template-columns: 1fr 1.6fr;
+    gap: 24px;
+    align-items: start;
+}
+
+.sidebar-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* Card / Panel Styles */
+.panel {
+    background-color: var(--panel-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    box-shadow: var(--shadow-lg);
+    transition: var(--transition-base);
+}
+
+.panel:hover {
+    border-color: var(--border-hover);
+}
+
+h2 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Custom list for rules */
+.rules-box {
+    background-color: rgba(255, 255, 255, 0.02);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    padding: 16px;
+}
+
+.rules-box ol {
+    list-style: none;
+    counter-reset: rules-counter;
+}
+
+.rules-box li {
+    counter-increment: rules-counter;
+    margin-bottom: 12px;
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    position: relative;
+    padding-left: 28px;
+}
+
+.rules-box li:last-child {
+    margin-bottom: 0;
+}
+
+.rules-box li::before {
+    content: counter(rules-counter);
+    position: absolute;
+    left: 0;
+    top: 1px;
+    width: 18px;
+    height: 18px;
+    background-color: rgba(99, 102, 241, 0.1);
+    color: var(--accent);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+/* Calendar styling */
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.calendar-month-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.calendar-weekday-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+    text-align: center;
+    margin-bottom: 8px;
+}
+
+.weekday-lbl {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+}
+
+.day {
+    aspect-ratio: 1;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    font-weight: 700;
+    background-color: rgba(255, 255, 255, 0.01);
+    color: var(--text-muted);
+    position: relative;
+    cursor: default;
+    transition: var(--transition-base);
+}
+
+.day:hover {
+    background-color: rgba(255, 255, 255, 0.04);
+    border-color: var(--border-hover);
+    transform: translateY(-1px);
+}
+
+.day.win {
+    background-color: var(--win-color);
+    color: var(--win-text);
+    border-color: var(--win-border);
+    box-shadow: 0 0 10px var(--win-glow);
+}
+
+.day.win:hover {
+    background-color: rgba(16, 185, 129, 0.15);
+    border-color: var(--win-text);
+}
+
+.day.loss {
+    background-color: var(--loss-color);
+    color: var(--loss-text);
+    border-color: var(--loss-border);
+    box-shadow: 0 0 10px var(--loss-glow);
+}
+
+.day.loss:hover {
+    background-color: rgba(239, 68, 68, 0.15);
+    border-color: var(--loss-text);
+}
+
+/* Forms layout & controls */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group:last-child {
+    margin-bottom: 0;
+}
+
+label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: var(--text-muted);
+    letter-spacing: 0.025em;
+}
+
+input,
+select,
+textarea {
+    width: 100%;
+    padding: 10px 14px;
+    background-color: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    color: var(--text-main);
+    font-family: var(--font-primary);
+    font-size: 0.9rem;
+    font-weight: 500;
+    outline: none;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition-base);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: var(--accent);
+    background-color: rgba(255, 255, 255, 0.05);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+/* Disabled input state */
+input:disabled {
+    background-color: rgba(255, 255, 255, 0.01);
+    color: var(--text-main);
+    border-color: var(--border);
+    cursor: not-allowed;
+    opacity: 0.85;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.row {
+    display: flex;
+    gap: 16px;
+}
+
+.row > div {
+    flex: 1;
+    min-width: 0; /* Prevents overflow in flex child */
+}
+
+/* Buttons */
+button {
+    background-color: var(--accent);
+    color: var(--accent-text);
+    border: none;
+    padding: 12px 20px;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 0.95rem;
+    font-family: var(--font-primary);
+    width: 100%;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
+    transition: var(--transition-base);
+}
+
+button:hover {
+    background-color: var(--accent-hover);
+    box-shadow: 0 4px 18px var(--accent-glow);
+    transform: translateY(-1px);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+/* Auto calculated P&L Alert Badge */
+.auto-calc {
+    background-color: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--border);
+    padding: 14px;
+    border-radius: var(--radius-md);
+    font-size: 0.95rem;
+    margin-bottom: 20px;
+    text-align: center;
+    font-weight: 700;
+    transition: var(--transition-base);
+    letter-spacing: -0.01em;
+}
+
+/* Responsive breakpoint styling */
+@media (max-width: 768px) {
+    body {
+        padding: 20px 16px;
+    }
+    header h1 {
+        font-size: 1.4rem;
+    }
+    .container {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    .row {
+        flex-direction: column;
+        gap: 0;
+    }
+}
