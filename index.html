@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trading Journal & Calendar</title>
+    <style>
+        :root {
+            --bg-color: #f4f4f5;
+            --panel-bg: #ffffff;
+            --text-main: #3f3f46;
+            --text-muted: #71717a;
+            --border: #e4e4e7;
+            --win-color: #dcfce7;
+            --win-text: #166534;
+            --loss-color: #fee2e2;
+            --loss-text: #991b1b;
+            --accent: #52525b;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 1000px;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 20px;
+        }
+
+        .panel {
+            background: var(--panel-bg);
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+
+        h2,
+        h3 {
+            margin-top: 0;
+            color: var(--text-main);
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 10px;
+        }
+
+        /* Calendar Styles */
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            margin-top: 15px;
+        }
+
+        .day {
+            aspect-ratio: 1;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9em;
+            font-weight: bold;
+            background: var(--bg-color);
+            position: relative;
+        }
+
+        .day.win {
+            background-color: var(--win-color);
+            color: var(--win-text);
+            border-color: var(--win-text);
+        }
+
+        .day.loss {
+            background-color: var(--loss-color);
+            color: var(--loss-text);
+            border-color: var(--loss-text);
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--accent);
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 60px;
+        }
+
+        .row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .row>div {
+            flex: 1;
+        }
+
+        button {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #3f3f46;
+        }
+
+        .rules-box {
+            background-color: #f8fafc;
+            border-left: 4px solid var(--accent);
+            padding: 10px;
+            font-size: 0.85em;
+            margin-bottom: 20px;
+        }
+
+        .auto-calc {
+            background-color: #e2e8f0;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div>
+            <div class="panel" style="margin-bottom: 20px;">
+                <h2>My Trading Rules</h2>
+                <div class="rules-box">
+                    <ol style="margin: 0; padding-left: 15px;">
+                        <li>Risk 1% of total (or max $1000/10% if personal capital).</li>
+                        <li>No revenge/retrading after a loss. Take the day off.</li>
+                        <li>Don’t rush pulling out, but don't stay too long. Be confident!</li>
+                        <li>One trade a day (Starter - 1 Year).</li>
+                        <li>Log ALL trade entries and reviews.</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h2>Trade Calendar (Current Month)</h2>
+                <div id="calendar" class="calendar-grid"></div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <h2>Daily Trade Log</h2>
+            <form id="tradeForm">
+                <div class="row">
+                    <div class="form-group">
+                        <label>Date</label>
+                        <input type="date" id="tradeDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Account Type</label>
+                        <select id="accType" onchange="calculateRisk()">
+                            <option value="funded">Funded/Prop</option>
+                            <option value="personal">Personal Capital</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group">
+                        <label>Total Account Balance ($)</label>
+                        <input type="number" id="accBalance" oninput="calculateRisk()" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Max Allowed Risk ($)</label>
+                        <input type="text" id="maxRisk" disabled style="background: #f4f4f5; font-weight: bold;">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Pre-Market Plan</label>
+                    <textarea id="preMarket" placeholder="What are you watching today?" required></textarea>
+                </div>
+
+                <div class="row">
+                    <div class="form-group">
+                        <label>Market Type</label>
+                        <select id="marketType">
+                            <option>Bull Trend</option>
+                            <option>Bear Trend</option>
+                            <option>Range Bound</option>
+                            <option>Choppy / Unclear</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Position</label>
+                        <select id="positionType" onchange="calculatePnL()">
+                            <option value="long">Long (Buy)</option>
+                            <option value="short">Short (Sell)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group">
+                        <label>Shares / Contracts</label>
+                        <input type="number" id="shares" oninput="calculatePnL()" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Stop Loss Price ($)</label>
+                        <input type="number" step="0.01" id="stopLoss" required>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group">
+                        <label>Entry Price ($)</label>
+                        <input type="number" step="0.01" id="entryPrice" oninput="calculatePnL()" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Exit Price ($)</label>
+                        <input type="number" step="0.01" id="exitPrice" oninput="calculatePnL()" required>
+                    </div>
+                </div>
+
+                <div class="auto-calc" id="pnlDisplay">
+                    Auto-Calculated P&L: $0.00
+                </div>
+
+                <div class="form-group">
+                    <label>Mindset / Emotions during trade</label>
+                    <textarea id="mindset" placeholder="Were you confident? Anxious? Did you rush?" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Mistakes (If any)</label>
+                    <textarea id="mistakes" placeholder="Did you break any rules?"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>End of Day Review</label>
+                    <textarea id="eodReview" placeholder="Final thoughts, lessons learned..." required></textarea>
+                </div>
+
+                <button type="submit">Save Trade Log</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Set today's date automatically
+        document.getElementById('tradeDate').valueAsDate = new Date();
+
+        // Calculate Max Risk autonomously based on Rule 1
+        function calculateRisk() {
+            const balance = parseFloat(document.getElementById('accBalance').value) || 0;
+            const type = document.getElementById('accType').value;
+            let maxRisk = 0;
+
+            if (type === 'personal') {
+                maxRisk = Math.min(1000, balance * 0.10); // Max $1000, up to 10%
+            } else {
+                maxRisk = balance * 0.01; // 1% of total
+            }
+            document.getElementById('maxRisk').value = "$" + maxRisk.toFixed(2);
+        }
+
+        // Auto-calculate Net P&L
+        let currentPnL = 0;
+        function calculatePnL() {
+            const entry = parseFloat(document.getElementById('entryPrice').value) || 0;
+            const exit = parseFloat(document.getElementById('exitPrice').value) || 0;
+            const shares = parseFloat(document.getElementById('shares').value) || 0;
+            const pos = document.getElementById('positionType').value;
+
+            if (entry > 0 && exit > 0 && shares > 0) {
+                if (pos === 'long') {
+                    currentPnL = (exit - entry) * shares;
+                } else {
+                    currentPnL = (entry - exit) * shares;
+                }
+                const display = document.getElementById('pnlDisplay');
+                display.innerText = `Auto-Calculated P&L: $${currentPnL.toFixed(2)}`;
+                display.style.backgroundColor = currentPnL >= 0 ? 'var(--win-color)' : 'var(--loss-color)';
+                display.style.color = currentPnL >= 0 ? 'var(--win-text)' : 'var(--loss-text)';
+            }
+        }
+
+        // Save Trade and Update Calendar
+        document.getElementById('tradeForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const date = document.getElementById('tradeDate').value;
+            const tradeData = { pnl: currentPnL };
+
+            // Fetch existing logs from local storage
+            let logs = JSON.parse(localStorage.getItem('tradingLogs')) || {};
+            logs[date] = tradeData;
+            localStorage.setItem('tradingLogs', JSON.stringify(logs));
+
+            alert('Trade logged successfully! Remember Rule #4: One trade a day. You are done for the day.');
+            renderCalendar();
+            this.reset();
+            document.getElementById('tradeDate').valueAsDate = new Date();
+            document.getElementById('pnlDisplay').innerText = `Auto-Calculated P&L: $0.00`;
+            document.getElementById('pnlDisplay').style.backgroundColor = '#e2e8f0';
+            document.getElementById('pnlDisplay').style.color = '#333';
+        });
+
+        // Render Calendar
+        function renderCalendar() {
+            const calendar = document.getElementById('calendar');
+            calendar.innerHTML = '';
+            const logs = JSON.parse(localStorage.getItem('tradingLogs')) || {};
+
+            // Get current month details
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = now.getMonth();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+            for (let i = 1; i <= daysInMonth; i++) {
+                const dayDiv = document.createElement('div');
+                dayDiv.className = 'day';
+                dayDiv.innerText = i;
+
+                // Format date to match input type="date" (YYYY-MM-DD)
+                const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
+
+                if (logs[dateStr]) {
+                    if (logs[dateStr].pnl >= 0) {
+                        dayDiv.classList.add('win');
+                    } else {
+                        dayDiv.classList.add('loss');
+                    }
+                }
+                calendar.appendChild(dayDiv);
+            }
+        }
+
+        // Initial Render
+        renderCalendar();
+    </script>
+</body>
+
+</html>
